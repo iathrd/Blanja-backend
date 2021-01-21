@@ -5,6 +5,7 @@ const {
   updateAdressSchema
 } = require('../helpers/validation')
 const { Op } = require('sequelize')
+const { pagination } = require('../helpers/pagination')
 
 module.exports = {
   createAdress: async (req, res) => {
@@ -107,6 +108,56 @@ module.exports = {
       }
     } catch (error) {
       response(res, 'Failed to delete adress', {}, false, 500)
+    }
+  },
+  listAdress: async (req, res) => {
+    try {
+      const { search = '', limit = 3, page = 1 } = req.query
+      const offset = (page - 1) * limit
+      const { userId } = req.payload
+      const { count, rows } = await Adress.findAndCountAll({
+        where: {
+          userId,
+          [Op.or]: {
+            adress: {
+              [Op.like]: `%${search}%`
+            },
+            saveAs: {
+              [Op.like]: `%${search}%`
+            },
+            recipient: {
+              [Op.like]: `%${search}%`
+            },
+            city: {
+              [Op.like]: `%${search}%`
+            },
+            postalCode: {
+              [Op.like]: `%${search}%`
+            },
+            phoneNumber: {
+              [Op.like]: `%${search}%`
+            }
+          }
+        },
+        order: [['isPrimary', 'DESC']],
+        limit: +limit,
+        offset: +offset
+
+      })
+      if (rows) {
+        const pageInfo = pagination(
+          '/adress/listAdress',
+          req.query,
+          page,
+          limit,
+          count
+        )
+        response(res, 'Adress list', { data: rows, pageInfo })
+      } else {
+        response(res, 'You dont have adress', { data: [] })
+      }
+    } catch (error) {
+      response(res, 'Cant get Adress', {}, false, 500)
     }
   }
 }
