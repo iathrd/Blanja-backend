@@ -37,4 +37,31 @@ module.exports = {
         : response(res, "Internal server error", {}, false, 500);
     }
   },
+  listProduct: async (req, res) => {
+    try {
+      const { limit = 3, page = 1, sort = "price", sortTo = "ASC" } = req.query;
+      const offset = (page - 1) * limit;
+      const { userId } = req.payload;
+      const { count, rows } = await Product.findAndCountAll({
+        include: [{ model: ProductImage, as: "images" }],
+        order: [[sort, sortTo]],
+        limit: +limit,
+        offset: +offset,
+      });
+      if (rows) {
+        const pageInfo = pagination(
+          "/product/listProduct",
+          req.query,
+          page,
+          limit,
+          count
+        );
+        response(res, "Product list", { data: rows, pageInfo });
+      } else {
+        response(res, "data not found", { data: [] });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  },
 };
