@@ -41,4 +41,9 @@ module.exports = {
     image: Joi.string().required(),
     description: Joi.string().required(),
   }),
+  updateCategorySchema: Joi.object({
+    name: Joi.string(),
+    image: Joi.string(),
+    description: Joi.string(),
+  }),
 };

@@ -1,6 +1,9 @@
 const { response } = require("../helpers/response");
 const { Category } = require("../models");
-const { createCategorySchema } = require("../helpers/validation");
+const {
+  createCategorySchema,
+  updateCategorySchema,
+} = require("../helpers/validation");
 
 module.exports = {
   createdCategory: async (req, res) => {
@@ -21,6 +24,31 @@ module.exports = {
         res(res, "Failed to create category", {}, false, 400);
       }
     } catch (error) {
+      error.isJoi
+        ? response(res, error.message, {}, false, 400)
+        : response(res, "Internal server error", {}, false, 500);
+    }
+  },
+  editCategory: async (req, res) => {
+    try {
+        const {id} = req.params
+      if (req.file !== undefined) {
+        let { path } = req.file;
+        path = path.replace(/\\/g, "/");
+        req.body = {
+          ...req.body,
+          image: path,
+        };
+      }
+      const data = await updateCategorySchema.validateAsync(req.body);
+      const updateData = await Category.update(data, { where: { id } });
+      if (updateData) {
+        response(res, "Category updated");
+      } else {
+        response("Failed to update category");
+      }
+    } catch (error) {
+        console.log(error)
       error.isJoi
         ? response(res, error.message, {}, false, 400)
         : response(res, "Internal server error", {}, false, 500);
