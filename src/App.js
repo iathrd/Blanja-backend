@@ -19,12 +19,14 @@ const authRoute = require("./routes/auth");
 const userRoute = require("./routes/user");
 const adressRoute = require("./routes/adress");
 const categoryRoute = require("./routes/category");
+const ratingRoute = require("./routes/rating");
 
 // routesMiddleware
 app.use("/auth", authRoute);
 app.use("/user", verifyAccessToken, userRoute);
 app.use("/adress", verifyAccessToken, adressRoute);
 app.use("/category", verifyAccessToken, categoryRoute);
+app.use("/rating", verifyAccessToken, ratingRoute);
 
 // Error handler http request
 app.use(async (req, res, next) => {
