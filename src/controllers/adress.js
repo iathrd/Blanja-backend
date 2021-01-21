@@ -87,5 +87,26 @@ module.exports = {
     } catch (error) {
       response(res, 'Internal server error', {}, false, 500)
     }
+  },
+  deleteAdress: async (req, res) => {
+    try {
+      const { id } = req.params
+      const { userId } = req.payload
+      const deleteAdress = await Adress.destroy({
+        where: {
+          [Op.and]: {
+            id,
+            userId
+          }
+        }
+      })
+      if (deleteAdress) {
+        response(res, 'Delet succesfully')
+      } else {
+        response(res, 'Failed to delete adress', {}, false, 500)
+      }
+    } catch (error) {
+      response(res, 'Failed to delete adress', {}, false, 500)
+    }
   }
 }
