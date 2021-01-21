@@ -21,7 +21,7 @@ module.exports = {
       switch (role) {
         case 'custommer':
           if (Object.keys(userDetails).length && Object.keys(userData).length) {
-            const updateDetail = await UserDetail.update(userDetails, { where: { id } })
+            const updateDetail = await UserDetail.update(userDetails, { where: { userId } })
             if (updateDetail) {
               const updateUser = User.update(userData, { where: { id: userId } })
               if (updateUser) {
@@ -40,7 +40,7 @@ module.exports = {
               response(res, 'Internal server error', {}, false, 500)
             }
           } else {
-            const updateDetail = await UserDetail.update(userDetails, { where: { id: id } })
+            const updateDetail = await UserDetail.update(userDetails, { where: { userId: id } })
             if (updateDetail) {
               response(res, 'Update details sucesfully', { data: userDetails })
             } else {
@@ -57,6 +57,20 @@ module.exports = {
       error.isJoi
         ? response(res, error.message, {}, 400)
         : response(res, 'Internal server error', {}, 500)
+    }
+  },
+  getUser: async (req, res) => {
+    try {
+      const { userId } = req.payload
+      const user = await User.findOne({ include: [{ model: UserDetail, as: 'details' }], where: { id: userId } })
+      if (user) {
+        response(res, 'User detais', { data: user })
+      } else {
+        response(res, 'Internal server error', {}, false, 500)
+      }
+    } catch (error) {
+      console.log(error)
+      response(res, 'Internal server error', {}, false, 500)
     }
   }
 }

@@ -17,12 +17,12 @@ module.exports = {
         const hashPassword = await argon.hash(data.password)
         switch (role) {
           case 'custommer':
-            const userDetails = await UserDetail.create()
-            if (userDetails) {
-              const sendData = await User.create({ ...data, password: hashPassword, detailId: userDetails.id })
-              if (sendData) {
+            const dataUser = await User.create({ ...data, password: hashPassword })
+            if (dataUser) {
+              const userDetails = await UserDetail.create({ userId: dataUser.id })
+              if (userDetails) {
                 response(res, 'Register succesfully', {
-                  data: { ...sendData.dataValues, password: undefined }
+                  data: { ...dataUser.dataValues, password: undefined }
                 })
               } else {
                 response(res, 'Internal server error', {}, false, 500)
