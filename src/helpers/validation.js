@@ -26,5 +26,14 @@ module.exports = {
     postalCode: Joi.string().trim().min(5).max(5).required(),
     phoneNumber: Joi.string().trim().min(12).max(13).required(),
     isPrimary: Joi.boolean()
+  }),
+  updateAdressSchema: Joi.object({
+    saveAs: Joi.string().trim().min(4),
+    recipient: Joi.string().trim().min(4),
+    adress: Joi.string().trim().min(5),
+    city: Joi.string().trim().min(4),
+    postalCode: Joi.string().trim().min(5).max(5),
+    phoneNumber: Joi.string().trim().min(12).max(13),
+    isPrimary: Joi.boolean()
   })
 }
