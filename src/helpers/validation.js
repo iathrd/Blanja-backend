@@ -17,5 +17,13 @@ module.exports = {
   changePasswordSchema: Joi.object({
     oldPassword: Joi.string().min(8).required(),
     newPassword: Joi.string().min(8).required()
+  }),
+  createAdressSchema: Joi.object({
+    saveAs: Joi.string().trim().min(4).required(),
+    recipient: Joi.string().trim().min(4).required(),
+    adress: Joi.string().trim().min(5).required(),
+    city: Joi.string().trim().min(4).required(),
+    postalCode: Joi.string().trim().min(5).max(5).required(),
+    phoneNumber: Joi.string().trim().min(12).max(13).required()
   })
 }
