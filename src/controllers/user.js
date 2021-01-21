@@ -72,5 +72,25 @@ module.exports = {
       console.log(error)
       response(res, 'Internal server error', {}, false, 500)
     }
+  },
+  deleteUser: async (req, res) => {
+    try {
+      const { userId } = req.payload
+      const deleteDetails = await UserDetail.destroy({ where: { userId } })
+      console.log(deleteDetails)
+      if (deleteDetails) {
+        const deleteUser = await User.destroy({ where: { id: userId } })
+        if (deleteUser) {
+          response(res, 'Delete succesfully')
+        } else {
+          response(res, 'Internal server erro', {}, false, 500)
+        }
+      } else {
+        response(res, 'Internal server erro', {}, false, 500)
+      }
+    } catch (error) {
+      console.log(error)
+      response(res, 'Internal server error', {}, false, 500)
+    }
   }
 }
