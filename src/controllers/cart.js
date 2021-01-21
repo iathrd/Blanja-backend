@@ -1,6 +1,8 @@
 const { response } = require("../helpers/response");
 const { Cart, Product, ProductImage } = require("../models");
 const { pagination } = require("../helpers/pagination");
+const { Op } = require("sequelize");
+
 module.exports = {
   createCart: async (req, res) => {
     const { userId } = req.payload;
@@ -50,5 +52,24 @@ module.exports = {
     } catch (error) {
       console.log(error);
     }
+  },
+  deleteCart: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { userId } = req.payload;
+      const deleteCart = Cart.destroy({
+        where: {
+          [Op.and]: {
+            id,
+            userId,
+          },
+        },
+      });
+      if (deleteCart) {
+        response(res, "Item deleted");
+      } else {
+        response(res, "Failed to delete Bag");
+      }
+    } catch (error) {}
   },
 };
