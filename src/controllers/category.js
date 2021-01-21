@@ -4,6 +4,7 @@ const {
   createCategorySchema,
   updateCategorySchema,
 } = require("../helpers/validation");
+const { pagination } = require("../helpers/pagination");
 
 module.exports = {
   createdCategory: async (req, res) => {
@@ -31,7 +32,7 @@ module.exports = {
   },
   editCategory: async (req, res) => {
     try {
-        const {id} = req.params
+      const { id } = req.params;
       if (req.file !== undefined) {
         let { path } = req.file;
         path = path.replace(/\\/g, "/");
@@ -48,10 +49,36 @@ module.exports = {
         response("Failed to update category");
       }
     } catch (error) {
-        console.log(error)
+      console.log(error);
       error.isJoi
         ? response(res, error.message, {}, false, 400)
         : response(res, "Internal server error", {}, false, 500);
+    }
+  },
+  getCategories: async (req, res) => {
+    try {
+      const { limit = 5, page = 1 } = req.query;
+      const offset = (page - 1) * limit;
+      const { count, rows } = await Category.findAndCountAll({
+        order: [["createdAt", "DESC"]],
+        limit: +limit,
+        offset: +offset,
+      });
+      if (rows) {
+        const pageInfo = pagination(
+          "/category/listCategory",
+          req.query,
+          page,
+          limit,
+          count
+        );
+        response(res, "Category list", { data: rows, pageInfo });
+      } else {
+        response(res, "Not found", { data: [] });
+      }
+    } catch (error) {
+      console.log(error);
+      response(res, "Internal server error", {}, false, 500);
     }
   },
 };

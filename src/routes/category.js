@@ -8,5 +8,6 @@ route.patch(
   upload.single("image"),
   category.editCategory
 );
+route.get("/listCategory", category.getCategories);
 
 module.exports = route;
