@@ -1,7 +1,7 @@
 /* eslint-disable no-case-declarations */
 const { response } = require('../helpers/response')
 const { createSeller } = require('../helpers/validation')
-const { User } = require('../models')
+const { User, UserDetail } = require('../models')
 const { signAccesToken } = require('../helpers/jwt_init')
 const argon = require('argon2')
 
@@ -17,14 +17,20 @@ module.exports = {
         const hashPassword = await argon.hash(data.password)
         switch (role) {
           case 'custommer':
-            const sendData = await User.create({ ...data, password: hashPassword })
-            if (sendData) {
-              response(res, 'Register succesfully', {
-                data: { ...sendData.dataValues, password: undefined }
-              })
+            const userDetails = await UserDetail.create()
+            if (userDetails) {
+              const sendData = await User.create({ ...data, password: hashPassword, detailId: userDetails.id })
+              if (sendData) {
+                response(res, 'Register succesfully', {
+                  data: { ...sendData.dataValues, password: undefined }
+                })
+              } else {
+                response(res, 'Internal server error', {}, false, 500)
+              }
             } else {
-              response(res, 'Internal server error', {}, false, 500)
+              response(res, 'Internal server error', {})
             }
+
             break
 
           default:

@@ -6,6 +6,7 @@ const app = express()
 
 // helpers
 const { APP_PORT } = process.env
+const { verifyAccessToken } = require('./helpers/jwt_init')
 
 // middleware
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -15,9 +16,11 @@ app.use('/assets/uploads/img', express.static('assets/uploads/img'))
 
 // routes
 const authRoute = require('./routes/auth')
+const userRoute = require('./routes/user')
 
 // routesMiddleware
 app.use('/auth', authRoute)
+app.use('/user', verifyAccessToken, userRoute)
 
 // Error handler http request
 app.use(async (req, res, next) => {
