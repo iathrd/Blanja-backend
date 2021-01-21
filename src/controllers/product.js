@@ -1,7 +1,8 @@
 const { response } = require("../helpers/response");
 const { pagination } = require("../helpers/pagination");
-const { Product, ProductImage } = require("../models");
+const { Product, ProductImage, Rating } = require("../models");
 const { createProduct } = require("../helpers/validation");
+const sequelize = require("sequelize");
 
 module.exports = {
   createProduct: async (req, res) => {
@@ -43,7 +44,9 @@ module.exports = {
       const offset = (page - 1) * limit;
       const { userId } = req.payload;
       const { count, rows } = await Product.findAndCountAll({
-        include: [{ model: ProductImage, as: "images" }],
+        include: [
+          { model: ProductImage, as: "images" },
+        ],
         order: [[sort, sortTo]],
         limit: +limit,
         offset: +offset,
