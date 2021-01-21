@@ -20,7 +20,8 @@ module.exports = (sequelize, DataTypes) => {
     adress: DataTypes.STRING,
     city: DataTypes.STRING,
     postalCode: DataTypes.STRING,
-    phoneNumber: DataTypes.STRING
+    phoneNumber: DataTypes.STRING,
+    isPrimary: DataTypes.BOOLEAN
   }, {
     sequelize,
     modelName: 'Adress',

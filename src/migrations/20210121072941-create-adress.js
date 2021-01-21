@@ -29,6 +29,9 @@ module.exports = {
       phoneNumber: {
         type: Sequelize.STRING
       },
+      isPrimary: {
+        type: Sequelize.BOOLEAN
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

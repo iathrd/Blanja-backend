@@ -17,10 +17,12 @@ app.use('/assets/uploads/img', express.static('assets/uploads/img'))
 // routes
 const authRoute = require('./routes/auth')
 const userRoute = require('./routes/user')
+const adressRoute = require('./routes/adress')
 
 // routesMiddleware
 app.use('/auth', authRoute)
 app.use('/user', verifyAccessToken, userRoute)
+app.use('/adress', verifyAccessToken, adressRoute)
 
 // Error handler http request
 app.use(async (req, res, next) => {
