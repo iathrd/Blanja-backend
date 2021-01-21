@@ -13,5 +13,9 @@ module.exports = {
     avatar: Joi.string(),
     gender: Joi.string(),
     birthDay: Joi.string()
+  }),
+  changePasswordSchema: Joi.object({
+    oldPassword: Joi.string().min(8).required(),
+    newPassword: Joi.string().min(8).required()
   })
 }

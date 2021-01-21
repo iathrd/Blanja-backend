@@ -1,6 +1,7 @@
 const { response } = require('../helpers/response')
-const { updateUser } = require('../helpers/validation')
+const { updateUser, changePasswordSchema } = require('../helpers/validation')
 const { User, UserDetail } = require('../models')
+const argon = require('argon2')
 
 module.exports = {
   updateUser: async (req, res) => {
@@ -91,6 +92,31 @@ module.exports = {
     } catch (error) {
       console.log(error)
       response(res, 'Internal server error', {}, false, 500)
+    }
+  },
+  changePassword: async (req, res) => {
+    try {
+      const { userId } = req.payload
+      const data = await changePasswordSchema.validateAsync(req.body)
+      const user = await User.findByPk(userId)
+      if (user) {
+        const validatePassword = await argon.verify(user.password, data.oldPassword)
+        if (validatePassword) {
+          const hashedPassword = await argon.hash(data.newPassword)
+          const updatePassword = await User.update({ password: hashedPassword }, { where: { id: userId } })
+          if (updatePassword) {
+            response(res, 'Change password succesfullt')
+          } else {
+            response(res, 'Failed to change password')
+          }
+        }
+      } else {
+        response(res, 'Internal server error', {}, false, 500)
+      }
+    } catch (error) {
+      error.isJoi
+        ? response(res, error.message, {}, false, 400)
+        : response(res, 'Internal server error', {}, false, 500)
     }
   }
 }
