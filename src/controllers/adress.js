@@ -66,5 +66,26 @@ module.exports = {
         ? response(res, error.message, {}, false, 400)
         : response(res, 'Internal server error', {}, false, 500)
     }
+  },
+  getAdress: async (req, res) => {
+    try {
+      const { id } = req.params
+      const { userId } = req.payload
+      const adress = await Adress.findOne({
+        where: {
+          [Op.and]: {
+            id,
+            userId
+          }
+        }
+      })
+      if (adress) {
+        response(res, 'Adress detail', { data: adress.dataValues })
+      } else {
+        response(res, `Adress with id ${id} doesnt exist`)
+      }
+    } catch (error) {
+      response(res, 'Internal server error', {}, false, 500)
+    }
   }
 }
