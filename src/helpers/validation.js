@@ -46,4 +46,12 @@ module.exports = {
     image: Joi.string(),
     description: Joi.string(),
   }),
+  createProduct: Joi.object({
+    name: Joi.string().min(4).required(),
+    price: Joi.number().required(),
+    description: Joi.string().min(4).required(),
+    brand: Joi.string().min(4).required(),
+    size: Joi.string().required(),
+    color: Joi.string().required(),
+  }),
 };

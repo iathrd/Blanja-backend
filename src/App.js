@@ -20,6 +20,7 @@ const userRoute = require("./routes/user");
 const adressRoute = require("./routes/adress");
 const categoryRoute = require("./routes/category");
 const ratingRoute = require("./routes/rating");
+const productRoute = require("./routes/product");
 
 // routesMiddleware
 app.use("/auth", authRoute);
@@ -27,6 +28,7 @@ app.use("/user", verifyAccessToken, userRoute);
 app.use("/adress", verifyAccessToken, adressRoute);
 app.use("/category", verifyAccessToken, categoryRoute);
 app.use("/rating", verifyAccessToken, ratingRoute);
+app.use("/product", verifyAccessToken, productRoute);
 
 // Error handler http request
 app.use(async (req, res, next) => {
