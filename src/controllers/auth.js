@@ -2,6 +2,7 @@
 const { response } = require('../helpers/response')
 const { createSeller } = require('../helpers/validation')
 const { User } = require('../models')
+const { signAccesToken } = require('../helpers/jwt_init')
 const argon = require('argon2')
 
 module.exports = {
@@ -35,6 +36,33 @@ module.exports = {
       error.isJoi
         ? response(res, error.message, {}, false, 400)
         : response(res, 'Internal server error', {}, false, 500)
+    }
+  },
+  login: async (req, res) => {
+    try {
+      const { role } = req.params
+      switch (role) {
+        case 'custommer':
+          const { email, password } = req.body
+          const findUser = await User.findOne({ where: { email } })
+          if (findUser) {
+            const validatePassword = await argon.verify(findUser.password, password)
+            if (validatePassword) {
+              const token = await signAccesToken(findUser.id)
+              response(res, 'Login succesfullt', { token })
+            } else {
+              response(res, 'Invalid email or password')
+            }
+          } else {
+            response(res, 'Invalid email or password', {}, false, 400)
+          }
+          break
+        default:
+          response(res, 'Not found', {}, false, 404)
+          break
+      }
+    } catch (error) {
+      error && response(res, 'Internal server error', {}, false, 500)
     }
   }
 }
