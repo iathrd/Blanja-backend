@@ -129,10 +129,12 @@ module.exports = {
             response(res, "Failed to change password");
           }
         }
+        response(res, "Old password is wrong", {}, false, 400);
       } else {
         response(res, "Internal server error", {}, false, 500);
       }
     } catch (error) {
+      console.log(error);
       error.isJoi
         ? response(res, error.message, {}, false, 400)
         : response(res, "Internal server error", {}, false, 500);
