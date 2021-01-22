@@ -2,7 +2,6 @@ const { response } = require("../helpers/response");
 const { pagination } = require("../helpers/pagination");
 const { Product, ProductImage, Rating } = require("../models");
 const { createProduct } = require("../helpers/validation");
-const sequelize = require("sequelize");
 
 module.exports = {
   createProduct: async (req, res) => {
@@ -33,6 +32,7 @@ module.exports = {
         response(res, "Failed to create product", {}, false, 400);
       }
     } catch (error) {
+      console.log(error)
       error.isJoi
         ? response(res, error.message, {}, false, 400)
         : response(res, "Internal server error", {}, false, 500);
