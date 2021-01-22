@@ -71,7 +71,7 @@ module.exports = {
               const token = await signAccesToken(findUser.id);
               response(res, "Login succesfullt", { token });
             } else {
-              response(res, "Invalid email or password");
+              response(res, "Invalid email or password",{},false,400),;
             }
           } else {
             response(res, "Invalid email or password", {}, false, 400);
