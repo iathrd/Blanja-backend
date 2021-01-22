@@ -32,7 +32,7 @@ module.exports = {
         response(res, "Failed to create product", {}, false, 400);
       }
     } catch (error) {
-      console.log(error)
+      console.log(error);
       error.isJoi
         ? response(res, error.message, {}, false, 400)
         : response(res, "Internal server error", {}, false, 500);
@@ -83,7 +83,7 @@ module.exports = {
       });
       if (rows) {
         const pageInfo = pagination(
-          "/product/listProduct",
+          "/product/newProduct",
           req.query,
           page,
           limit,
@@ -115,7 +115,7 @@ module.exports = {
       });
       if (rows) {
         const pageInfo = pagination(
-          "/product/listProduct",
+          "/product/popularProduct",
           req.query,
           page,
           limit,
