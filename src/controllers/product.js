@@ -68,7 +68,7 @@ module.exports = {
   newProduct: async (req, res) => {
     try {
       const {
-        limit = 3,
+        limit = 15,
         page = 1,
         sort = "createdAt",
         sortTo = "DESC",
@@ -100,7 +100,7 @@ module.exports = {
   popularProduct: async (req, res) => {
     try {
       const {
-        limit = 3,
+        limit = 15,
         page = 1,
         sort = "createdAt",
         sortTo = "ASC",
