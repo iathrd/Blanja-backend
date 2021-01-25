@@ -1,68 +1,68 @@
-const { response } = require("../helpers/response");
-const { pagination } = require("../helpers/pagination");
-const { Product, ProductImage, Rating } = require("../models");
-const { createProduct } = require("../helpers/validation");
+const { response } = require('../helpers/response')
+const { pagination } = require('../helpers/pagination')
+const { Product, ProductImage, Rating } = require('../models')
+const { createProduct } = require('../helpers/validation')
 
 module.exports = {
   createProduct: async (req, res) => {
     try {
-      const { userId } = req.payload;
-      const data = await createProduct.validateAsync(req.body);
-      const sendProduct = await Product.create(data);
+      const { userId } = req.payload
+      const data = await createProduct.validateAsync(req.body)
+      const sendProduct = await Product.create(data)
 
       if (sendProduct) {
         const images = req.files.map((data, index) => {
           return {
             productId: sendProduct.id,
-            image: data.path.replace(/\\/g, "/"),
+            image: data.path.replace(/\\/g, '/'),
             indexOf: index,
-            userId,
-          };
-        });
-        const sendImage = await ProductImage.bulkCreate(images);
+            userId
+          }
+        })
+        const sendImage = await ProductImage.bulkCreate(images)
         if (sendImage) {
-          response(res, "Product Created", {
+          response(res, 'Product Created', {
             data: sendProduct.dataValues,
-            images,
-          });
+            images
+          })
         } else {
-          response(res, "Failed to create product", {}, false, 400);
+          response(res, 'Failed to create product', {}, false, 400)
         }
       } else {
-        response(res, "Failed to create product", {}, false, 400);
+        response(res, 'Failed to create product', {}, false, 400)
       }
     } catch (error) {
-      console.log(error);
+      console.log(error)
       error.isJoi
         ? response(res, error.message, {}, false, 400)
-        : response(res, "Internal server error", {}, false, 500);
+        : response(res, 'Internal server error', {}, false, 500)
     }
   },
   listProduct: async (req, res) => {
     try {
-      const { limit = 3, page = 1, sort = "price", sortTo = "ASC" } = req.query;
-      const offset = (page - 1) * limit;
-      const { userId } = req.payload;
+      const { limit = 3, page = 1, sort = 'price', sortTo = 'ASC' } = req.query
+      const offset = (page - 1) * limit
+      const { userId } = req.payload
       const { count, rows } = await Product.findAndCountAll({
-        include: [{ model: ProductImage, as: "images" }],
+        include: [{ model: ProductImage, as: 'images' }],
         order: [[sort, sortTo]],
         limit: +limit,
-        offset: +offset,
-      });
+        offset: +offset
+      })
       if (rows) {
         const pageInfo = pagination(
-          "/product/listProduct",
+          '/product/listProduct',
           req.query,
           page,
           limit,
           count
-        );
-        response(res, "Product list", { data: rows, pageInfo });
+        )
+        response(res, 'Product list', { data: rows, pageInfo })
       } else {
-        response(res, "data not found", { data: [] });
+        response(res, 'data not found', { data: [] })
       }
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   },
   newProduct: async (req, res) => {
@@ -70,31 +70,31 @@ module.exports = {
       const {
         limit = 15,
         page = 1,
-        sort = "createdAt",
-        sortTo = "DESC",
-      } = req.query;
-      const offset = (page - 1) * limit;
-      const { userId } = req.payload;
+        sort = 'createdAt',
+        sortTo = 'DESC'
+      } = req.query
+      const offset = (page - 1) * limit
+      const { userId } = req.payload
       const { count, rows } = await Product.findAndCountAll({
-        include: [{ model: ProductImage, as: "images" }],
+        include: [{ model: ProductImage, as: 'images' }],
         order: [[sort, sortTo]],
         limit: +limit,
-        offset: +offset,
-      });
+        offset: +offset
+      })
       if (rows) {
         const pageInfo = pagination(
-          "/product/newProduct",
+          '/product/newProduct',
           req.query,
           page,
           limit,
           count
-        );
-        response(res, "Product list", { data: rows, pageInfo });
+        )
+        response(res, 'Product list', { data: rows, pageInfo })
       } else {
-        response(res, "data not found", { data: [] });
+        response(res, 'data not found', { data: [] })
       }
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   },
   popularProduct: async (req, res) => {
@@ -102,31 +102,31 @@ module.exports = {
       const {
         limit = 15,
         page = 1,
-        sort = "createdAt",
-        sortTo = "ASC",
-      } = req.query;
-      const offset = (page - 1) * limit;
-      const { userId } = req.payload;
+        sort = 'createdAt',
+        sortTo = 'ASC'
+      } = req.query
+      const offset = (page - 1) * limit
+      const { userId } = req.payload
       const { count, rows } = await Product.findAndCountAll({
-        include: [{ model: ProductImage, as: "images" }],
+        include: [{ model: ProductImage, as: 'images' }],
         order: [[sort, sortTo]],
         limit: +limit,
-        offset: +offset,
-      });
+        offset: +offset
+      })
       if (rows) {
         const pageInfo = pagination(
-          "/product/popularProduct",
+          '/product/popularProduct',
           req.query,
           page,
           limit,
           count
-        );
-        response(res, "Product list", { data: rows, pageInfo });
+        )
+        response(res, 'Product list', { data: rows, pageInfo })
       } else {
-        response(res, "data not found", { data: [] });
+        response(res, 'data not found', { data: [] })
       }
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
-  },
-};
+  }
+}
