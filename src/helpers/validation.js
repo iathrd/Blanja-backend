@@ -53,5 +53,10 @@ module.exports = {
     brand: Joi.string().min(4).required(),
     size: Joi.string().required(),
     color: Joi.string().required()
+  }),
+  createSubCategory: Joi.object({
+    name: Joi.string().min(4).required(),
+    categoryId: Joi.number().required(),
+    description: Joi.string().min(5).required()
   })
 }
