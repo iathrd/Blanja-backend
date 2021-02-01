@@ -9,5 +9,6 @@ route.patch(
   category.editCategory
 )
 route.get('/listCategory', category.getCategories)
+route.delete('/deleteCategory/:id', category.deleteCategory)
 
 module.exports = route

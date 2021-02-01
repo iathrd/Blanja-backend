@@ -80,5 +80,24 @@ module.exports = {
       console.log(error)
       response(res, 'Internal server error', {}, false, 500)
     }
+  },
+  deleteCategory: async (req, res) => {
+    try {
+      const { id } = req.params
+      const { userId } = req.payload
+      const deleteData = await Category.destroy({
+        where: {
+          id,
+          userId
+        }
+      })
+      if (deleteData) {
+        response(res, 'Category deleted')
+      } else {
+        response(res, 'Delete failed')
+      }
+    } catch (error) {
+      response(res, 'Internal server error', {}, false, 500)
+    }
   }
 }
