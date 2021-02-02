@@ -24,7 +24,6 @@ module.exports = {
     try {
       const { id } = req.params
       const data = await updateSubCategory.validateAsync(req.body)
-      console.log(data)
       const updateData = await SubCategory.update(data, { where: { id } })
       if (updateData) {
         response(res, 'Update succesfuly', { data: data })
@@ -73,6 +72,19 @@ module.exports = {
       }
     } catch (error) {
       response(res, 'Internal server error', {}, false, 400)
+    }
+  },
+  deleteSubCategory: async (req, res) => {
+    try {
+      const { id } = req.params
+      const deletesubCategory = await SubCategory.destroy({ where: { id } })
+      if (deletesubCategory) {
+        response(res, 'Category deleted')
+      } else {
+        response(res, 'Failed to delete category')
+      }
+    } catch (error) {
+      response(res, 'Failed to delete', {}, false, 500)
     }
   }
 }
