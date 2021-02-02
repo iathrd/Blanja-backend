@@ -32,7 +32,7 @@ app.use('/category', verifyAccessToken, categoryRoute)
 app.use('/rating', verifyAccessToken, ratingRoute)
 app.use('/product', verifyAccessToken, productRoute)
 app.use('/cart', verifyAccessToken, cartRoute)
-app.use('/subCategory',verifyAccessToken, subCategoryRoute)
+app.use('/subCategory', verifyAccessToken, subCategoryRoute)
 
 // Error handler http request
 app.use(async (req, res, next) => {
