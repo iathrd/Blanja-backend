@@ -43,5 +43,18 @@ module.exports = {
     } catch (error) {
       response(res, 'Internal server error', {}, false, 500)
     }
+  },
+  deleteSize: async (req, res) => {
+    try {
+      const { id } = req.params
+      const deleteSize = await Size.destroy({ where: { id } })
+      if (deleteSize) {
+        response(res, 'Size deleted')
+      } else {
+        response(res, 'Failed to deleted size', {}, false, 400)
+      }
+    } catch (error) {
+      response(res, 'Internal server error', {}, false, 500)
+    }
   }
 }
