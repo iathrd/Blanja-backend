@@ -14,8 +14,8 @@ module.exports = {
       userId: {
         type: Sequelize.INTEGER
       },
-      colorType: {
-        type: Sequelize.INTEGER
+      sizeType: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

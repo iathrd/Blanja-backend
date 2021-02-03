@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
   Size.init({
     name: DataTypes.STRING,
     userId: DataTypes.INTEGER,
-    colorType: DataTypes.INTEGER
+    sizeType: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Size',
