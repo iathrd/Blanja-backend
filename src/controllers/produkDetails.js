@@ -1,6 +1,7 @@
 const { response } = require('../helpers/response')
 const { pagination } = require('../helpers/pagination')
-const { Size } = require('../models')
+const { Size, SizeDetail } = require('../models')
+const { sizeDetailsSchema } = require('../helpers/validation')
 
 module.exports = {
   createSize: async (req, res) => {
@@ -55,6 +56,61 @@ module.exports = {
       }
     } catch (error) {
       response(res, 'Internal server error', {}, false, 500)
+    }
+  },
+  createSizeDetail: async (req, res) => {
+    try {
+      const { sizeId } = req.params
+      const data = await sizeDetailsSchema.validateAsync(req.body)
+      const sendData = await SizeDetail.create({ ...data, sizeId })
+      if (sendData) {
+        response(res, 'Size created', { data: sendData.dataValues })
+      } else {
+        response(res, 'Failed to create size', {}, false, 400)
+      }
+    } catch (error) {
+      error.isJoi
+        ? response(res, error.message, {}, false, 400)
+        : response(res, 'Internal server error', {}, false, 500)
+    }
+  },
+  updateSizeDetail: async (req, res) => {
+    try {
+      const { id } = req.params
+      const updateData = await SizeDetail.update(req.body, { where: { id } })
+      if (updateData) {
+        response(res, 'Size updated')
+      } else {
+        response(res, 'Failed to update size', {}, false, 400)
+      }
+    } catch (error) {
+      response(res, 'Internal server error', {}, false, 500)
+    }
+  },
+  getSizeDetail: async (req, res) => {
+    try {
+      const { id } = req.params
+      const getData = await SizeDetail.findOne({ where: { id } })
+      if (getData) {
+        response(res, 'Size details', { data: getData })
+      } else {
+        response(res, 'Failed to get data', {}, false, 400)
+      }
+    } catch (error) {
+      response(res, 'Internal server error', {}, false, 500)
+    }
+  },
+  deleteSizeDetail: async (req, res) => {
+    try {
+      const { id } = req.params
+      const deleteData = await SizeDetail.destroy({ where: { id } })
+      if (deleteData) {
+        response(res, 'Size deleted')
+      } else {
+        response(res, 'Failed to delete')
+      }
+    } catch (error) {
+      response(res, 'Internal server error')
     }
   }
 }
