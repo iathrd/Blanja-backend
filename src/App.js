@@ -23,6 +23,7 @@ const ratingRoute = require('./routes/rating')
 const productRoute = require('./routes/product')
 const cartRoute = require('./routes/cart')
 const subCategoryRoute = require('./routes/subCategory')
+const productDetailsRoute = require('./routes/produkDetails')
 
 // routesMiddleware
 app.use('/auth', authRoute)
@@ -33,6 +34,7 @@ app.use('/rating', verifyAccessToken, ratingRoute)
 app.use('/product', verifyAccessToken, productRoute)
 app.use('/cart', verifyAccessToken, cartRoute)
 app.use('/subCategory', verifyAccessToken, subCategoryRoute)
+app.use('/productDetails', productDetailsRoute)
 
 // Error handler http request
 app.use(async (req, res, next) => {

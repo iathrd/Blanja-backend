@@ -1,6 +1,6 @@
 const { response } = require('../helpers/response')
 const { pagination } = require('../helpers/pagination')
-const { Product, ProductImage, Rating } = require('../models')
+const { Product, ProductImage, Size } = require('../models')
 const { createProduct } = require('../helpers/validation')
 
 module.exports = {
@@ -128,5 +128,5 @@ module.exports = {
     } catch (error) {
       console.log(error)
     }
-  }
+  },
 }
