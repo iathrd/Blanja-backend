@@ -30,5 +30,18 @@ module.exports = {
     } catch (error) {
       response(res, 'Internal server error', {}, false, 500)
     }
+  },
+  getSize: async (req, res) => {
+    try {
+      const { id } = req.params
+      const getSize = await Size.findOne({ where: { id } })
+      if (getSize) {
+        response(res, 'Size details', { data: getSize })
+      } else {
+        response(res, 'Failed to get data', {}, false, 400)
+      }
+    } catch (error) {
+      response(res, 'Internal server error', {}, false, 500)
+    }
   }
 }
