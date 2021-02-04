@@ -141,5 +141,18 @@ module.exports = {
     } catch (error) {
       response(res, 'Internal server error', {}, false, 500)
     }
+  },
+  getColor: async (req, res) => {
+    try {
+      const { id } = req.params
+      const getData = await Color.findOne({ where: { id } })
+      if (getData) {
+        response(res, 'Color details', { data: getData })
+      } else {
+        response(res, `Color with id ${id} doest exist`, {}, false, 404)
+      }
+    } catch (error) {
+      response(res, 'Internal server error', {}, false, 500)
+    }
   }
 }
