@@ -1,7 +1,7 @@
 const { response } = require('../helpers/response')
 const { pagination } = require('../helpers/pagination')
 const { Size, SizeDetail, Color, ColorDetail } = require('../models')
-const { sizeDetailsSchema, colorSchema } = require('../helpers/validation')
+const { sizeDetailsSchema, colorSchema, colorDetailSchema } = require('../helpers/validation')
 
 module.exports = {
   createSize: async (req, res) => {
@@ -166,6 +166,23 @@ module.exports = {
       }
     } catch (error) {
       response(res, 'Internal server error', {}, false, 500)
+    }
+  },
+  createColorDetail: async (req, res) => {
+    try {
+      const { userId } = req.payload
+      const { id } = req.params
+      const data = await colorDetailSchema.validateAsync(req.body)
+      const createdData = await ColorDetail.create({ ...data, userId, colorId: id })
+      if (createdData) {
+        response(res, 'Color created', { data: createdData.dataValues })
+      } else {
+        response(res, 'Failed to create Color', {}, false, 400)
+      }
+    } catch (error) {
+      error.isJoi
+        ? response(res, error.message, {}, false, 400)
+        : response(res, 'Internal server error', {}, false, 500)
     }
   }
 }

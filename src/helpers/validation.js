@@ -70,5 +70,10 @@ module.exports = {
   colorSchema: Joi.object({
     name: Joi.string().required(),
     colorType: Joi.string().required()
+  }),
+  colorDetailSchema: Joi.object({
+    name: Joi.string().required(),
+    colorHex: Joi.string().required(),
+    description: Joi.string().required()
   })
 }
