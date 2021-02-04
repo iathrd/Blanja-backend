@@ -14,5 +14,6 @@ route.patch('/color/:id', details.updateColor)
 route.get('/color/:id', details.getColor)
 route.delete('/color/:id', details.deleteColor)
 route.post('/colorDetail/:id', details.createColorDetail)
+route.patch('/colorDetail/:id', details.updateColorDetail)
 
 module.exports = route

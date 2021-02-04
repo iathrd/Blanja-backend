@@ -184,5 +184,18 @@ module.exports = {
         ? response(res, error.message, {}, false, 400)
         : response(res, 'Internal server error', {}, false, 500)
     }
+  },
+  updateColorDetail: async (req, res) => {
+    try {
+      const { id } = req.params
+      const updateData = await ColorDetail.update(req.body, { where: { id } })
+      if (updateData) {
+        response(res, 'Update succesfult', { data: req.body })
+      } else {
+        response(res, 'Failed to update color', {}, false, 400)
+      }
+    } catch (error) {
+      response(res, 'Internal server error', {}, false, 500)
+    }
   }
 }
