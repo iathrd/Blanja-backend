@@ -1,7 +1,7 @@
 const { response } = require('../helpers/response')
 const { pagination } = require('../helpers/pagination')
-const { Size, SizeDetail } = require('../models')
-const { sizeDetailsSchema } = require('../helpers/validation')
+const { Size, SizeDetail, Color, ColorDetail } = require('../models')
+const { sizeDetailsSchema, colorSchema } = require('../helpers/validation')
 
 module.exports = {
   createSize: async (req, res) => {
@@ -111,6 +111,35 @@ module.exports = {
       }
     } catch (error) {
       response(res, 'Internal server error')
+    }
+  },
+  createColor: async (req, res) => {
+    try {
+      const { userId } = req.payload
+      const data = await colorSchema.validateAsync(req.body)
+      const createData = await Color.create({ ...data, userId })
+      if (createData) {
+        response(res, 'Color created', { data: createData.dataValues })
+      } else {
+        response(res, 'Faield to create color', {}, false, 400)
+      }
+    } catch (error) {
+      error.isJoi
+        ? response(res, error.message, {}, false, 400)
+        : response(res, 'Internal server error', {}, false, 500)
+    }
+  },
+  updateColor: async (req, res) => {
+    try {
+      const { id } = req.params
+      const updateData = await Color.update(req.body, { where: { id } })
+      if (updateData) {
+        response(res, 'Color updated', { data: req.body })
+      } else {
+        response(res, 'Failed to update color')
+      }
+    } catch (error) {
+      response(res, 'Internal server error', {}, false, 500)
     }
   }
 }

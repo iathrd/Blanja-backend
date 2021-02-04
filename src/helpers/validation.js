@@ -66,5 +66,9 @@ module.exports = {
   sizeDetailsSchema: Joi.object({
     name: Joi.string().required(),
     description: Joi.string().required()
+  }),
+  colorSchema: Joi.object({
+    name: Joi.string().required(),
+    colorType: Joi.string().required()
   })
 }
