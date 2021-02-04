@@ -154,5 +154,18 @@ module.exports = {
     } catch (error) {
       response(res, 'Internal server error', {}, false, 500)
     }
+  },
+  deleteColor: async (req, res) => {
+    try {
+      const { id } = req.params
+      const deleteData = await Color.destroy({ where: { id } })
+      if (deleteData) {
+        response(res, 'Delete succesfuly')
+      } else {
+        response(res, 'Delete failed', {}, false, 400)
+      }
+    } catch (error) {
+      response(res, 'Internal server error', {}, false, 500)
+    }
   }
 }
