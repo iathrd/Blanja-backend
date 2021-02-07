@@ -50,9 +50,14 @@ module.exports = {
     name: Joi.string().min(4).required(),
     price: Joi.number().required(),
     description: Joi.string().min(4).required(),
-    brand: Joi.string().min(4).required(),
-    size: Joi.string().required(),
-    color: Joi.string().required()
+    userId: Joi.number().required(),
+    categoryId: Joi.number().required(),
+    subCategoryId: Joi.number().required(),
+    quantity: Joi.number().required(),
+    colorId: Joi.number().required(),
+    sizeId: Joi.number().required(),
+    discount: Joi.number()
+
   }),
   createSubCategory: Joi.object({
     name: Joi.string().min(4).required(),

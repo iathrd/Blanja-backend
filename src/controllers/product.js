@@ -1,14 +1,16 @@
 const { response } = require('../helpers/response')
 const { pagination } = require('../helpers/pagination')
-const { Product, ProductImage, Size } = require('../models')
+const { Product, ProductImage, ProductDetail } = require('../models')
 const { createProduct } = require('../helpers/validation')
 
 module.exports = {
   createProduct: async (req, res) => {
     try {
       const { userId } = req.payload
-      const data = await createProduct.validateAsync(req.body)
-      const sendProduct = await Product.create(data)
+      const data = await createProduct.validateAsync({ ...req.body, userId })
+      const { colorId, sizeId, ...product } = data
+
+      const sendProduct = await Product.create(product)
 
       if (sendProduct) {
         const images = req.files.map((data, index) => {
@@ -19,10 +21,11 @@ module.exports = {
             userId
           }
         })
+        const productDetail = await ProductDetail.create({ colorId, sizeId, productId: sendProduct.id })
         const sendImage = await ProductImage.bulkCreate(images)
-        if (sendImage) {
+        if (sendImage && productDetail) {
           response(res, 'Product Created', {
-            data: sendProduct.dataValues,
+            data: { ...sendProduct.dataValues, ...productDetail.dataValues },
             images
           })
         } else {
@@ -42,7 +45,6 @@ module.exports = {
     try {
       const { limit = 3, page = 1, sort = 'price', sortTo = 'ASC' } = req.query
       const offset = (page - 1) * limit
-      const { userId } = req.payload
       const { count, rows } = await Product.findAndCountAll({
         include: [{ model: ProductImage, as: 'images' }],
         order: [[sort, sortTo]],
@@ -128,5 +130,5 @@ module.exports = {
     } catch (error) {
       console.log(error)
     }
-  },
+  }
 }
