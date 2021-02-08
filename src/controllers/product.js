@@ -101,7 +101,17 @@ module.exports = {
       } = req.query
       const offset = (page - 1) * limit
       const { count, rows } = await Product.findAndCountAll({
-        include: [{ model: ProductImage, as: 'images' }],
+        include: [
+          { model: ProductImage, as: 'images' },
+          {
+            model: ProductDetail,
+            as: 'detail',
+            include: [
+              { model: Color, as: 'color', include: [{ model: ColorDetail, as: 'detail' }] },
+              { model: Size, as: 'size', include: [{ model: SizeDetail, as: 'detail' }] }
+            ]
+          }
+        ],
         order: [[sort, sortTo]],
         limit: +limit,
         offset: +offset
@@ -132,7 +142,17 @@ module.exports = {
       } = req.query
       const offset = (page - 1) * limit
       const { count, rows } = await Product.findAndCountAll({
-        include: [{ model: ProductImage, as: 'images' }],
+        include: [
+          { model: ProductImage, as: 'images' },
+          {
+            model: ProductDetail,
+            as: 'detail',
+            include: [
+              { model: Color, as: 'color', include: [{ model: ColorDetail, as: 'detail' }] },
+              { model: Size, as: 'size', include: [{ model: SizeDetail, as: 'detail' }] }
+            ]
+          }
+        ],
         order: [[sort, sortTo]],
         limit: +limit,
         offset: +offset
