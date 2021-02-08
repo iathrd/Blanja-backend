@@ -1,6 +1,14 @@
 const { response } = require('../helpers/response')
 const { pagination } = require('../helpers/pagination')
-const { Product, ProductImage, ProductDetail } = require('../models')
+const {
+  Product,
+  ProductImage,
+  ProductDetail,
+  Color,
+  Size,
+  SizeDetail,
+  ColorDetail
+} = require('../models')
 const { createProduct } = require('../helpers/validation')
 
 module.exports = {
@@ -10,9 +18,13 @@ module.exports = {
       const data = await createProduct.validateAsync({ ...req.body, userId })
       const { colorId, sizeId, ...product } = data
 
-      const sendProduct = await Product.create(product)
+      const sendProductDetail = await ProductDetail.create({ colorId, sizeId })
 
-      if (sendProduct) {
+      if (sendProductDetail) {
+        const sendProduct = await Product.create(
+          { ...product, detailId: sendProductDetail.id },
+          { attributes: { exclude: ['userId'] } }
+        )
         const images = req.files.map((data, index) => {
           return {
             productId: sendProduct.id,
@@ -21,11 +33,13 @@ module.exports = {
             userId
           }
         })
-        const productDetail = await ProductDetail.create({ colorId, sizeId, productId: sendProduct.id })
         const sendImage = await ProductImage.bulkCreate(images)
-        if (sendImage && productDetail) {
+        if (sendImage && sendProduct) {
           response(res, 'Product Created', {
-            data: { ...sendProduct.dataValues, ...productDetail.dataValues },
+            data: {
+              ...sendProduct.dataValues,
+              ...sendProductDetail.dataValues
+            },
             images
           })
         } else {
@@ -46,7 +60,17 @@ module.exports = {
       const { limit = 3, page = 1, sort = 'price', sortTo = 'ASC' } = req.query
       const offset = (page - 1) * limit
       const { count, rows } = await Product.findAndCountAll({
-        include: [{ model: ProductImage, as: 'images' }],
+        include: [
+          { model: ProductImage, as: 'images' },
+          {
+            model: ProductDetail,
+            as: 'detail',
+            include: [
+              { model: Color, as: 'color', include: [{ model: ColorDetail, as: 'detail' }] },
+              { model: Size, as: 'size', include: [{ model: SizeDetail, as: 'detail' }] }
+            ]
+          }
+        ],
         order: [[sort, sortTo]],
         limit: +limit,
         offset: +offset
@@ -76,7 +100,6 @@ module.exports = {
         sortTo = 'DESC'
       } = req.query
       const offset = (page - 1) * limit
-      const { userId } = req.payload
       const { count, rows } = await Product.findAndCountAll({
         include: [{ model: ProductImage, as: 'images' }],
         order: [[sort, sortTo]],
@@ -108,7 +131,6 @@ module.exports = {
         sortTo = 'ASC'
       } = req.query
       const offset = (page - 1) * limit
-      const { userId } = req.payload
       const { count, rows } = await Product.findAndCountAll({
         include: [{ model: ProductImage, as: 'images' }],
         order: [[sort, sortTo]],

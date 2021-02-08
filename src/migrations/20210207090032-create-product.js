@@ -29,6 +29,9 @@ module.exports = {
       quantity: {
         type: Sequelize.INTEGER
       },
+      detailId: {
+        type: Sequelize.INTEGER
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
